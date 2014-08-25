@@ -1,6 +1,6 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = '2'
-PROJECT_DIR = File.dirname(__FILE__)
+VAGRANTFILE_DIR = File.dirname(__FILE__)
 MACHINE_PROVISIONER_PATH = 'C:\Users\Radu\Git\test-automation.git'
 
 # Default configuration file

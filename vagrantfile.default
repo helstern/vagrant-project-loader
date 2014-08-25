@@ -1,0 +1,39 @@
+
+# @return [Hash]
+def box_configuration_default
+  configuration = {
+      :hostname                => 'vagrant-box',
+      :machine_name            => 'vagrant-box',
+      # list of hashes with these keys: :guestpath, :hostpath, :create, :owner, :group, :nfs, :transient, :extra
+      # example:
+      # {
+      #   :guestpath => "/var/www/default/code",
+      #   :hostpath => "../code",
+      #   :group    => "www-data"
+      # }
+      :additional_sync_folders   => [],
+
+      # fileserver root, should contain the following dir structure
+      # conf
+      #    fileserver.conf
+      #  www
+      #    common
+      #
+      :fileserver_mount_src         => '',
+
+      :hostOnlyInterfaceName   => '',
+      :bridgedInterfaceName    => '',
+
+      :environment             => '04-production',
+      # what function this machine will perform, equivalent to puppet node
+      :machine_role             => 'dev'
+  }
+
+  bridged_interfaces = `vboxmanage list bridgedifs`
+  configuration[:bridgedInterfaceName] = bridged_interfaces.lines.first[/(?<=Name:).*$/].strip!
+
+  host_only_interfaces = `vboxmanage list hostonlyifs`
+  configuration[:hostOnlyInterfaceName] = host_only_interfaces.lines.first[/(?<=Name:).*$/].strip!
+
+  return configuration
+end
