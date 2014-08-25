@@ -1,0 +1,31 @@
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = '2'
+PROJECT_DIR = File.dirname(__FILE__)
+MACHINE_PROVISIONER_PATH = 'C:\Users\Radu\Git\test-automation.git'
+
+# Default configuration file
+load 'vagrantfile.default'
+
+# Local configuration file
+if File.file?('vagrantfile.personal')
+  load 'vagrantfile.personal'
+end
+
+# Build box configuration
+$box_configuration = {}
+if defined?(box_configuration_personal) and defined?(box_configuration_default)
+  $box_configuration = box_configuration_personal()
+  $box_configuration = box_configuration_default().merge($box_configuration)
+elsif defined?(box_configuration_default)
+  $box_configuration = box_configuration_default.merge({})
+else
+  raise 'Could not load machine configuration defaults'
+end
+
+# load other configuration
+Dir.foreach('vagrantfile.d') { |filename|
+  next if %w(. ..).include?(filename)
+
+  puts "loading #{filename}"
+  load "vagrantfile.d/#{filename}"
+}
