@@ -6,8 +6,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) { |config|
   # sync the library folder
   config.vm.synced_folder "#{MACHINE_PROVISIONER_PATH}", '/puppet'
 
-  if $box_configuration.key? :fileserver_mount_src
-    config.vm.synced_folder $box_configuration.fetch(:fileserver_mount_src), '/puppet/fileserver', {}
+  if $box_configuration.fetch(:fileserver_mount_src, '') != ''
+    config.vm.synced_folder $box_configuration.fetch(:fileserver_mount_src), '/srv/puppet-fileserver', {}
   end
 
   config.vm.provision :puppet do |puppet|
@@ -45,8 +45,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) { |config|
     puppet.options << '--modulepath /puppet/puppet/modules:/etc/puppet/modules'
     puppet.options << '--libdir /puppet/puppet/lib'
 
-    if $box_configuration.key? :fileserver_mount_src
-      puppet.options << '--fileserverconfig /puppet/fileserver/conf/fileserver.conf'
+    if $box_configuration.fetch(:fileserver_mount_src, '') != ''
+      puppet.options << '--fileserverconfig /srv/puppet-fileserver/conf/fileserver.conf'
     end
 
   end
